@@ -94,13 +94,6 @@
         <div class="arrowCol">
           <button class="arrow" id="s1Up">▲</button>
           <button class="arrow" id="s1Down">▼</button>
-    <div class="panel" id="panel" style="display:none;">
-    <h3>WCRT CONTROL</h3>
-
-    <div class="field">
-      <label>Team 1 Name</label>
-      <input id="t1In" placeholder="DESYNC" />
-    </div>
         </div>
         <div id="s1Out" class="score orange">0</div>
       </div>
@@ -116,98 +109,103 @@
         <div id="s2Out" class="score blue">0</div>
       </div>
     </div>
-  </div>
-    <div class="field">
-      <label>Team 2 Name</label>
-      <input id="t2In" placeholder="GHOSTLINE" />
-    </div>
 
-    <div class="field">
-      <label>Best Of</label>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <div class="arrowCol">
-          <button class="arrow" id="boUp">▲</button>
-          <button class="arrow" id="boDown">▼</button>
-        </div>
-        <input id="boIn" type="number" min="1" max="99" style="flex:1;" />
+    <!-- CONTROL PANEL (below scoreboard, no overlap) -->
+    <div class="panel" id="panel" style="display:none;">
+      <h3>WCRT CONTROL</h3>
+
+      <div class="field">
+        <label>Team 1 Name</label>
+        <input id="t1In" placeholder="DESYNC" />
       </div>
-      <div class="miniTitle">Use arrows to change</div>
-    </div>
 
-    <div class="btnRow">
-      <button class="btn" id="apply">APPLY NAMES</button>
-      <button class="btn" id="reset">RESET SCORES</button>
+      <div class="field">
+        <label>Team 2 Name</label>
+        <input id="t2In" placeholder="GHOSTLINE" />
+      </div>
+
+      <div class="field">
+        <label>Best Of</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div class="arrowCol">
+            <button class="arrow" id="boUp">▲</button>
+            <button class="arrow" id="boDown">▼</button>
+          </div>
+          <input id="boIn" type="number" min="1" max="99" style="flex:1;" />
+        </div>
+        <div class="miniTitle">Use arrows to change</div>
+      </div>
+
+      <div class="btnRow">
+        <button class="btn" id="apply">APPLY NAMES</button>
+        <button class="btn" id="reset">RESET SCORES</button>
+      </div>
     </div>
   </div>
 
-<script>
-  const KEY = "WCRT_LIVE_V1";
+  <script>
+    const KEY = "WCRT_LIVE_V1";
+    const stateDefault = { bo: 5, t1: "TEAM ONE", t2: "TEAM TWO", s1: 0, s2: 0 };
 
-  const stateDefault = { bo: 5, t1: "TEAM ONE", t2: "TEAM TWO", s1: 0, s2: 0 };
-
-  function loadState(){
-    try { return { ...stateDefault, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; }
-    catch { return { ...stateDefault }; }
-  }
-  function saveState(s){
-    localStorage.setItem(KEY, JSON.stringify(s));
-    render();
-  }
-  function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-
-  function render(){
-    const s = loadState();
-    document.getElementById("boOut").textContent = s.bo;
-    document.getElementById("t1Out").textContent = s.t1;
-    document.getElementById("t2Out").textContent = s.t2;
-    document.getElementById("s1Out").textContent = s.s1;
-    document.getElementById("s2Out").textContent = s.s2;
-
-    // if in control mode, sync inputs
-    const panel = document.getElementById("panel");
-    if (panel.style.display !== "none"){
-      document.getElementById("t1In").value = s.t1;
-      document.getElementById("t2In").value = s.t2;
-      document.getElementById("boIn").value = s.bo;
+    function loadState(){
+      try { return { ...stateDefault, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; }
+      catch { return { ...stateDefault }; }
     }
-  }
+    function saveState(s){
+      localStorage.setItem(KEY, JSON.stringify(s));
+      render();
+    }
+    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 
-  // Listen for changes from other tabs on same machine
-  window.addEventListener("storage", (e) => {
-    if (e.key === KEY) render();
-  });
-
-  // Score arrows (works in overlay too, but you’ll use them in control tab)
-  document.getElementById("s1Up").onclick   = () => { const s=loadState(); s.s1 = clamp(s.s1+1,0,99); saveState(s); };
-  document.getElementById("s1Down").onclick = () => { const s=loadState(); s.s1 = clamp(s.s1-1,0,99); saveState(s); };
-  document.getElementById("s2Up").onclick   = () => { const s=loadState(); s.s2 = clamp(s.s2+1,0,99); saveState(s); };
-  document.getElementById("s2Down").onclick = () => { const s=loadState(); s.s2 = clamp(s.s2-1,0,99); saveState(s); };
-
-  // Control mode
-  const params = new URLSearchParams(location.search);
-  const control = params.get("control") === "1";
-  if (control){
-    document.getElementById("panel").style.display = "block";
-    document.getElementById("apply").onclick = () => {
+    function render(){
       const s = loadState();
-      s.t1 = (document.getElementById("t1In").value || "TEAM ONE").toUpperCase();
-      s.t2 = (document.getElementById("t2In").value || "TEAM TWO").toUpperCase();
-      s.bo = clamp(Number(document.getElementById("boIn").value || 5), 1, 99);
-      saveState(s);
-    };
-    document.getElementById("reset").onclick = () => {
-      const s = loadState();
-      s.s1 = 0; s.s2 = 0;
-      saveState(s);
-    };
-    document.getElementById("boUp").onclick   = () => { const s=loadState(); s.bo = clamp(s.bo+1,1,99); saveState(s); };
-    document.getElementById("boDown").onclick = () => { const s=loadState(); s.bo = clamp(s.bo-1,1,99); saveState(s); };
-  } else {
-    // hide panel in OBS overlay view
-    document.getElementById("panel").style.display = "none";
-  }
+      document.getElementById("boOut").textContent = s.bo;
+      document.getElementById("t1Out").textContent = s.t1;
+      document.getElementById("t2Out").textContent = s.t2;
+      document.getElementById("s1Out").textContent = s.s1;
+      document.getElementById("s2Out").textContent = s.s2;
 
-  render();
-</script>
+      const panel = document.getElementById("panel");
+      if (panel.style.display !== "none"){
+        document.getElementById("t1In").value = s.t1;
+        document.getElementById("t2In").value = s.t2;
+        document.getElementById("boIn").value = s.bo;
+      }
+    }
+
+    window.addEventListener("storage", (e) => {
+      if (e.key === KEY) render();
+    });
+
+    document.getElementById("s1Up").onclick   = () => { const s=loadState(); s.s1 = clamp(s.s1+1,0,99); saveState(s); };
+    document.getElementById("s1Down").onclick = () => { const s=loadState(); s.s1 = clamp(s.s1-1,0,99); saveState(s); };
+    document.getElementById("s2Up").onclick   = () => { const s=loadState(); s.s2 = clamp(s.s2+1,0,99); saveState(s); };
+    document.getElementById("s2Down").onclick = () => { const s=loadState(); s.s2 = clamp(s.s2-1,0,99); saveState(s); };
+
+    const params = new URLSearchParams(location.search);
+    const control = params.get("control") === "1";
+
+    if (control){
+      document.getElementById("panel").style.display = "block";
+      document.getElementById("apply").onclick = () => {
+        const s = loadState();
+        s.t1 = (document.getElementById("t1In").value || "TEAM ONE").toUpperCase();
+        s.t2 = (document.getElementById("t2In").value || "TEAM TWO").toUpperCase();
+        s.bo = clamp(Number(document.getElementById("boIn").value || 5), 1, 99);
+        saveState(s);
+      };
+      document.getElementById("reset").onclick = () => {
+        const s = loadState();
+        s.s1 = 0; s.s2 = 0;
+        saveState(s);
+      };
+      document.getElementById("boUp").onclick   = () => { const s=loadState(); s.bo = clamp(s.bo+1,1,99); saveState(s); };
+      document.getElementById("boDown").onclick = () => { const s=loadState(); s.bo = clamp(s.bo-1,1,99); saveState(s); };
+    } else {
+      document.getElementById("panel").style.display = "none";
+    }
+
+    render();
+  </script>
 </body>
 </html>
