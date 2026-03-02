@@ -1,15 +1,16 @@
 {
   "teams": [
     { "id": "ascendency", "name": "ASCENDENCY", "logo": "logos/Ascendency.jpg" },
-    { "id": "crescent", "name": "Crescent", "logo": "logos/Crescent.jpg" }
+    { "id": "desync", "name": "DESYNC", "logo": "logos/Desync.jpg" }
   ],
   "current": {
     "bo": 5,
     "team1": "ascendency",
-    "team2": "crescent",
+    "team2": "desync",
     "score1": 0,
     "score2": 0
   }
 }
+
 
 
