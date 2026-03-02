@@ -3,209 +3,120 @@
 <head>
 <meta charset="utf-8" />
 <title>WCRT Live Scoreboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
-  :root{
-    --wcrt-blue:#19c5ff;
-    --wcrt-orange:#ff7a18;
-    --glass: rgba(10,14,24,0.22);
-    --stroke: rgba(255,255,255,0.12);
-  }
-  html,body{margin:0;height:100%;background:transparent;font-family:Arial,Helvetica,sans-serif;color:#fff;}
-  .wrap{width:980px;padding:16px 0;margin:0 auto;}
-  .bestof{
-    text-align:center;
-    font-weight:900;
-    letter-spacing:6px;
-    font-size:44px;
-    margin:12px 0 26px;
-    background: linear-gradient(90deg,var(--wcrt-blue),#ffffff,var(--wcrt-orange));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    text-transform:uppercase;
-  }
-  .row{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:18px 24px;margin:18px 0;border-radius:999px;
-    background: linear-gradient(180deg, rgba(10,14,24,0.35), rgba(10,14,24,0.18));
-    border:1px solid var(--stroke);
-    backdrop-filter: blur(10px);
-  }
-  .name{
-    width:70%;
-    font-size:30px;font-weight:900;letter-spacing:1px;
-    text-transform:uppercase;
-    text-shadow: 0 0 10px rgba(255,255,255,0.10);
-    overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
-  }
-  .scoreBox{
-    display:flex;align-items:center;gap:12px;
-  }
-  .score{
-    width:80px;text-align:center;
-    font-size:56px;font-weight:900;
-    border-radius:14px;
-    padding:2px 8px;
-  }
-  .orange{ color:var(--wcrt-orange); text-shadow:0 0 12px rgba(255,122,24,0.55); }
-  .blue{ color:var(--wcrt-blue); text-shadow:0 0 12px rgba(25,197,255,0.55); }
-
-  /* control panel */
-  .panel{
-    width:980px;
-    margin:40px auto 0;
-    padding:20px;
-    border-radius:24px;
-    background: rgba(0,0,0,0.55);
-    border:1px solid rgba(255,255,255,0.12);
-    backdrop-filter: blur(10px);
-    color:#fff;
+:root{
+  --wcrt-blue:#19c5ff;
+  --wcrt-orange:#ff7a18;
 }
-  .panel h3{margin:0 0 10px;font-size:14px;letter-spacing:2px;}
-  .field{margin:10px 0;}
-  .field label{display:block;font-size:12px;opacity:.8;margin-bottom:6px;}
-  .field input{
-    width:100%;padding:10px;border-radius:12px;border:none;
-    font-size:14px;
-  }
-  .btnRow{display:flex;gap:10px;margin-top:10px;}
-  .btn{
-    flex:1;padding:12px;border:none;border-radius:14px;
-    font-weight:900;letter-spacing:1px;cursor:pointer;
-    background: linear-gradient(90deg,var(--wcrt-blue),#ffffff,var(--wcrt-orange));
-  }
-
-  /* arrow buttons */
-  .arrowCol{display:flex;flex-direction:column;gap:6px;}
-  .arrow{
-    width:44px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,0.18);
-    background: rgba(255,255,255,0.06);
-    color:#fff;font-weight:900;cursor:pointer;
-  }
-  .miniTitle{font-size:12px;opacity:.7;letter-spacing:2px;text-transform:uppercase;margin-top:6px;}
+html,body{margin:0;background:transparent;font-family:Arial,Helvetica,sans-serif;color:#fff;}
+.wrap{width:980px;margin:0 auto;padding:20px 0;}
+.bestof{text-align:center;font-size:44px;font-weight:900;margin-bottom:25px;
+background:linear-gradient(90deg,var(--wcrt-blue),#fff,var(--wcrt-orange));
+-webkit-background-clip:text;background-clip:text;color:transparent;}
+.row{display:flex;justify-content:space-between;align-items:center;
+padding:18px 24px;margin:15px 0;border-radius:999px;
+background:rgba(10,14,24,.35);border:1px solid rgba(255,255,255,.12);}
+.name{font-size:30px;font-weight:900;text-transform:uppercase;}
+.score{font-size:56px;font-weight:900;}
+.orange{color:var(--wcrt-orange);}
+.blue{color:var(--wcrt-blue);}
+.panel{width:980px;margin:40px auto 0;padding:20px;border-radius:24px;
+background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);}
+.field{margin:10px 0;}
+.field input{width:100%;padding:10px;border-radius:10px;border:none;}
+.btn{margin-top:10px;padding:12px;border:none;border-radius:10px;
+background:linear-gradient(90deg,var(--wcrt-blue),#fff,var(--wcrt-orange));
+font-weight:900;cursor:pointer;}
 </style>
 </head>
-
 <body>
-  <div class="wrap">
-    <div class="bestof">BEST OF <span id="boOut">5</span></div>
 
-    <div class="row">
-      <div id="t1Out" class="name">TEAM ONE</div>
-      <div class="scoreBox">
-        <div class="arrowCol">
-          <button class="arrow" id="s1Up">▲</button>
-          <button class="arrow" id="s1Down">▼</button>
-        </div>
-        <div id="s1Out" class="score orange">0</div>
-      </div>
-    </div>
+<div class="wrap">
+<div class="bestof">BEST OF <span id="boOut">5</span></div>
 
-    <div class="row">
-      <div id="t2Out" class="name">TEAM TWO</div>
-      <div class="scoreBox">
-        <div class="arrowCol">
-          <button class="arrow" id="s2Up">▲</button>
-          <button class="arrow" id="s2Down">▼</button>
-        </div>
-        <div id="s2Out" class="score blue">0</div>
-      </div>
-    </div>
+<div class="row">
+<div id="t1Out" class="name">TEAM ONE</div>
+<div id="s1Out" class="score orange">0</div>
+</div>
 
-    <!-- CONTROL PANEL (below scoreboard, no overlap) -->
-    <div class="panel" id="panel" style="display:none;">
-      <h3>WCRT CONTROL</h3>
+<div class="row">
+<div id="t2Out" class="name">TEAM TWO</div>
+<div id="s2Out" class="score blue">0</div>
+</div>
 
-      <div class="field">
-        <label>Team 1 Name</label>
-        <input id="t1In" placeholder="DESYNC" />
-      </div>
+<div class="panel" id="panel" style="display:none;">
+<div class="field">
+<label>Team 1</label>
+<input id="t1In">
+</div>
+<div class="field">
+<label>Team 2</label>
+<input id="t2In">
+</div>
+<div class="field">
+<label>Best Of</label>
+<input id="boIn" type="number">
+</div>
+<div class="field">
+<label>Score 1</label>
+<input id="s1In" type="number">
+</div>
+<div class="field">
+<label>Score 2</label>
+<input id="s2In" type="number">
+</div>
+<button class="btn" id="apply">APPLY</button>
+<div id="status"></div>
+</div>
+</div>
 
-      <div class="field">
-        <label>Team 2 Name</label>
-        <input id="t2In" placeholder="GHOSTLINE" />
-      </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-      <div class="field">
-        <label>Best Of</label>
-        <div style="display:flex;gap:10px;align-items:center;">
-          <div class="arrowCol">
-            <button class="arrow" id="boUp">▲</button>
-            <button class="arrow" id="boDown">▼</button>
-          </div>
-          <input id="boIn" type="number" min="1" max="99" style="flex:1;" />
-        </div>
-        <div class="miniTitle">Use arrows to change</div>
-      </div>
+const firebaseConfig = {
+  apiKey: "AIzaSyAyx0NtyEX0Mt0G6usPm35z1I8jiYA_3n4",
+  authDomain: "scoreboard-wcrt.firebaseapp.com",
+  databaseURL: "https://scoreboard-wcrt-default-rtdb.firebaseio.com",
+  projectId: "scoreboard-wcrt",
+  storageBucket: "scoreboard-wcrt.firebasestorage.app",
+  messagingSenderId: "1060016682944",
+  appId: "1:1060016682944:web:9088b940f615fd0b89ba25"
+};
 
-      <div class="btnRow">
-        <button class="btn" id="apply">APPLY NAMES</button>
-        <button class="btn" id="reset">RESET SCORES</button>
-      </div>
-    </div>
-  </div>
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
 
-  <script>
-    const KEY = "WCRT_LIVE_V1";
-    const stateDefault = { bo: 5, t1: "TEAM ONE", t2: "TEAM TWO", s1: 0, s2: 0 };
+const params = new URLSearchParams(location.search);
+const control = params.get("control") === "1";
 
-    function loadState(){
-      try { return { ...stateDefault, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; }
-      catch { return { ...stateDefault }; }
-    }
-    function saveState(s){
-      localStorage.setItem(KEY, JSON.stringify(s));
-      render();
-    }
-    function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+if(control){
+document.getElementById("panel").style.display="block";
+signInAnonymously(auth);
+}
 
-    function render(){
-      const s = loadState();
-      document.getElementById("boOut").textContent = s.bo;
-      document.getElementById("t1Out").textContent = s.t1;
-      document.getElementById("t2Out").textContent = s.t2;
-      document.getElementById("s1Out").textContent = s.s1;
-      document.getElementById("s2Out").textContent = s.s2;
+onValue(ref(db,"scoreboard"), snap=>{
+const s=snap.val();
+if(!s) return;
+document.getElementById("boOut").textContent=s.bo;
+document.getElementById("t1Out").textContent=s.t1;
+document.getElementById("t2Out").textContent=s.t2;
+document.getElementById("s1Out").textContent=s.s1;
+document.getElementById("s2Out").textContent=s.s2;
+});
 
-      const panel = document.getElementById("panel");
-      if (panel.style.display !== "none"){
-        document.getElementById("t1In").value = s.t1;
-        document.getElementById("t2In").value = s.t2;
-        document.getElementById("boIn").value = s.bo;
-      }
-    }
-
-    window.addEventListener("storage", (e) => {
-      if (e.key === KEY) render();
-    });
-
-    document.getElementById("s1Up").onclick   = () => { const s=loadState(); s.s1 = clamp(s.s1+1,0,99); saveState(s); };
-    document.getElementById("s1Down").onclick = () => { const s=loadState(); s.s1 = clamp(s.s1-1,0,99); saveState(s); };
-    document.getElementById("s2Up").onclick   = () => { const s=loadState(); s.s2 = clamp(s.s2+1,0,99); saveState(s); };
-    document.getElementById("s2Down").onclick = () => { const s=loadState(); s.s2 = clamp(s.s2-1,0,99); saveState(s); };
-
-    const params = new URLSearchParams(location.search);
-    const control = params.get("control") === "1";
-
-    if (control){
-      document.getElementById("panel").style.display = "block";
-      document.getElementById("apply").onclick = () => {
-        const s = loadState();
-        s.t1 = (document.getElementById("t1In").value || "TEAM ONE").toUpperCase();
-        s.t2 = (document.getElementById("t2In").value || "TEAM TWO").toUpperCase();
-        s.bo = clamp(Number(document.getElementById("boIn").value || 5), 1, 99);
-        saveState(s);
-      };
-      document.getElementById("reset").onclick = () => {
-        const s = loadState();
-        s.s1 = 0; s.s2 = 0;
-        saveState(s);
-      };
-      document.getElementById("boUp").onclick   = () => { const s=loadState(); s.bo = clamp(s.bo+1,1,99); saveState(s); };
-      document.getElementById("boDown").onclick = () => { const s=loadState(); s.bo = clamp(s.bo-1,1,99); saveState(s); };
-    } else {
-      document.getElementById("panel").style.display = "none";
-    }
-
-    render();
-  </script>
+document.getElementById("apply")?.addEventListener("click",()=>{
+update(ref(db,"scoreboard"),{
+t1:document.getElementById("t1In").value,
+t2:document.getElementById("t2In").value,
+bo:Number(document.getElementById("boIn").value),
+s1:Number(document.getElementById("s1In").value),
+s2:Number(document.getElementById("s2In").value)
+});
+});
+</script>
 </body>
 </html>
