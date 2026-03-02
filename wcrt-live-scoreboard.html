@@ -158,21 +158,42 @@ const auth = getAuth(app);
 const params = new URLSearchParams(location.search);
 const control = params.get("control") === "1";
 
-if(control){
-  document.getElementById("panel").style.display="block";
-  signInAnonymously(auth);
+const statusEl = document.getElementById("status");
+
+if (control) {
+  document.getElementById("panel").style.display = "block";
+  statusEl.textContent = "Signing in…";
+
+  signInAnonymously(auth)
+    .then(() => {
+      statusEl.textContent = "Signed in ✅ (listening for data…)";
+    })
+    .catch((e) => {
+      statusEl.textContent = "Auth failed ❌ (check Anonymous + rules)";
+      console.log("AUTH ERROR:", e);
+      alert("AUTH ERROR: " + e.message);
+    });
+} else {
+  // overlay view: no panel
 }
 
-onValue(ref(db,"scoreboard"), snap=>{
-  const s=snap.val();
-  if(!s) return;
+onValue(
+  ref(db, "scoreboard"),
+  (snap) => {
+    const s = snap.val();
+    if (!s) return;
 
-  document.getElementById("boOut").textContent=s.bo ?? 5;
-  document.getElementById("t1Out").textContent=s.t1 ?? "TEAM ONE";
-  document.getElementById("t2Out").textContent=s.t2 ?? "TEAM TWO";
-  document.getElementById("s1Out").textContent=s.s1 ?? 0;
-  document.getElementById("s2Out").textContent=s.s2 ?? 0;
-});
+    document.getElementById("boOut").textContent = s.bo ?? 5;
+    document.getElementById("t1Out").textContent = s.t1 ?? "TEAM ONE";
+    document.getElementById("t2Out").textContent = s.t2 ?? "TEAM TWO";
+    document.getElementById("s1Out").textContent = s.s1 ?? 0;
+    document.getElementById("s2Out").textContent = s.s2 ?? 0;
+  },
+  (error) => {
+    console.error("DB ERROR:", error);
+    alert("DB ERROR: " + error.message);
+  }
+);
 
 document.getElementById("apply")?.addEventListener("click",()=>{
   update(ref(db,"scoreboard"),{
