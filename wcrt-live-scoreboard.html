@@ -4,36 +4,94 @@
 <meta charset="utf-8" />
 <title>WCRT Live Scoreboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 <style>
 :root{
   --wcrt-blue:#19c5ff;
   --wcrt-orange:#ff7a18;
 }
-html,body{margin:0;background:transparent;font-family:Arial,Helvetica,sans-serif;color:#fff;}
-.wrap{width:980px;margin:0 auto;padding:20px 0;}
-.bestof{text-align:center;font-size:44px;font-weight:900;margin-bottom:25px;
-background:linear-gradient(90deg,var(--wcrt-blue),#fff,var(--wcrt-orange));
--webkit-background-clip:text;background-clip:text;color:transparent;}
-.row{display:flex;justify-content:space-between;align-items:center;
-padding:18px 24px;margin:15px 0;border-radius:999px;
-background:rgba(10,14,24,.35);border:1px solid rgba(255,255,255,.12);}
-.name{font-size:30px;font-weight:900;text-transform:uppercase;}
-.score{font-size:56px;font-weight:900;}
-.orange{color:var(--wcrt-orange);}
-.blue{color:var(--wcrt-blue);}
-.panel{width:980px;margin:40px auto 0;padding:20px;border-radius:24px;
-background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);}
-.field{margin:10px 0;}
-.field input{width:100%;padding:10px;border-radius:10px;border:none;}
-.btn{margin-top:10px;padding:12px;border:none;border-radius:10px;
-background:linear-gradient(90deg,var(--wcrt-blue),#fff,var(--wcrt-orange));
-font-weight:900;cursor:pointer;}
+html,body{
+  margin:0;
+  background:transparent;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+}
+.wrap{
+  width:980px;
+  margin:0 auto;
+  padding:20px 0;
+}
+.bestof{
+  text-align:center;
+  font-size:44px;
+  font-weight:900;
+  margin-bottom:25px;
+  background:linear-gradient(90deg,var(--wcrt-blue),#fff,var(--wcrt-orange));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 24px;
+  margin:15px 0;
+  border-radius:999px;
+  background:rgba(10,14,24,.35);
+  border:1px solid rgba(255,255,255,.12);
+}
+.name{
+  font-size:30px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.score{
+  font-size:56px;
+  font-weight:900;
+}
+.orange{ color:var(--wcrt-orange); }
+.blue{ color:var(--wcrt-blue); }
+
+.panel{
+  width:980px;
+  margin:40px auto 0;
+  padding:20px;
+  border-radius:24px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.12);
+}
+.field{ margin:10px 0; }
+.field input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+}
+.btn{
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--wcrt-blue),#fff,var(--wcrt-orange));
+  font-weight:900;
+  cursor:pointer;
+}
+.status{
+  margin-top:10px;
+  font-size:12px;
+  opacity:.8;
+}
 </style>
 </head>
+
 <body>
 
 <div class="wrap">
-<div class="bestof">BEST OF <span id="boOut">5</span></div>
+
+<div class="bestof">
+BEST OF <span id="boOut">5</span>
+</div>
 
 <div class="row">
 <div id="t1Out" class="name">TEAM ONE</div>
@@ -50,28 +108,35 @@ font-weight:900;cursor:pointer;}
 <label>Team 1</label>
 <input id="t1In">
 </div>
+
 <div class="field">
 <label>Team 2</label>
 <input id="t2In">
 </div>
+
 <div class="field">
 <label>Best Of</label>
 <input id="boIn" type="number">
 </div>
+
 <div class="field">
 <label>Score 1</label>
 <input id="s1In" type="number">
 </div>
+
 <div class="field">
 <label>Score 2</label>
 <input id="s2In" type="number">
 </div>
+
 <button class="btn" id="apply">APPLY</button>
-<div id="status"></div>
+<div class="status" id="status">Connecting...</div>
+
 </div>
 </div>
 
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -94,29 +159,31 @@ const params = new URLSearchParams(location.search);
 const control = params.get("control") === "1";
 
 if(control){
-document.getElementById("panel").style.display="block";
-signInAnonymously(auth);
+  document.getElementById("panel").style.display="block";
+  signInAnonymously(auth);
 }
 
 onValue(ref(db,"scoreboard"), snap=>{
-const s=snap.val();
-if(!s) return;
-document.getElementById("boOut").textContent=s.bo;
-document.getElementById("t1Out").textContent=s.t1;
-document.getElementById("t2Out").textContent=s.t2;
-document.getElementById("s1Out").textContent=s.s1;
-document.getElementById("s2Out").textContent=s.s2;
+  const s=snap.val();
+  if(!s) return;
+
+  document.getElementById("boOut").textContent=s.bo ?? 5;
+  document.getElementById("t1Out").textContent=s.t1 ?? "TEAM ONE";
+  document.getElementById("t2Out").textContent=s.t2 ?? "TEAM TWO";
+  document.getElementById("s1Out").textContent=s.s1 ?? 0;
+  document.getElementById("s2Out").textContent=s.s2 ?? 0;
 });
 
 document.getElementById("apply")?.addEventListener("click",()=>{
-update(ref(db,"scoreboard"),{
-t1:document.getElementById("t1In").value,
-t2:document.getElementById("t2In").value,
-bo:Number(document.getElementById("boIn").value),
-s1:Number(document.getElementById("s1In").value),
-s2:Number(document.getElementById("s2In").value)
+  update(ref(db,"scoreboard"),{
+    t1:document.getElementById("t1In").value,
+    t2:document.getElementById("t2In").value,
+    bo:Number(document.getElementById("boIn").value),
+    s1:Number(document.getElementById("s1In").value),
+    s2:Number(document.getElementById("s2In").value)
+  });
 });
-});
+
 </script>
 </body>
 </html>
