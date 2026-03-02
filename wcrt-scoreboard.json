@@ -1,10 +1,13 @@
 {
-  "bo": 7,
-  "t1": "Lost",
-  "t2": "Desync",
-  "s1": 5,
-  "s2": 2
-
+  "teams": [
+    { "id": "desync", "name": "DESYNC", "logo": "logos/desync.png" },
+    { "id": "ghostline", "name": "GHOSTLINE", "logo": "logos/ghostline.png" }
+  ],
+  "current": {
+    "bo": 5,
+    "team1": "desync",
+    "team2": "ghostline",
+    "score1": 0,
+    "score2": 0
+  }
 }
-
-
