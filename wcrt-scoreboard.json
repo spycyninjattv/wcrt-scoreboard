@@ -1,13 +1,14 @@
 {
   "teams": [
-    { "id": "desync", "name": "DESYNC", "logo": "logos/desync.png" },
-    { "id": "ghostline", "name": "GHOSTLINE", "logo": "logos/ghostline.png" }
+    { "id": "ascendency", "name": "ASCENDENCY", "logo": "logos/Ascendency.jpg" },
+    { "id": "crescent", "name": "Crescent", "logo": "logos/Crescent.jpg" }
   ],
   "current": {
     "bo": 5,
-    "team1": "desync",
-    "team2": "ghostline",
+    "team1": "ascendency",
+    "team2": "desync",
     "score1": 0,
     "score2": 0
   }
 }
+
