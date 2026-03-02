@@ -132,30 +132,40 @@
   <div class="status" id="status"></div>
 
 <script>
-  // 🔧 Point this to wherever you host the JSON file:
-  const DATA_URL = "./wcrt-scoreboard.json";
+  const DATA_URL = "./wcrt-data.json";
 
   async function pull() {
     try {
-      // cache-bust so OBS always gets latest
       const res = await fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
 
-      if (data.bo !== undefined) document.getElementById("bo").textContent = data.bo;
-      if (data.t1 !== undefined) document.getElementById("t1").textContent = data.t1;
-      if (data.t2 !== undefined) document.getElementById("t2").textContent = data.t2;
-      if (data.s1 !== undefined) document.getElementById("s1").textContent = data.s1;
-      if (data.s2 !== undefined) document.getElementById("s2").textContent = data.s2;
+      const teams = new Map((data.teams || []).map(t => [t.id, t]));
+      const cur = data.current || {};
 
-      document.getElementById("status").textContent = "ok";
+      const t1 = teams.get(cur.team1);
+      const t2 = teams.get(cur.team2);
+
+      document.getElementById("bo").textContent = cur.bo ?? 5;
+
+      document.getElementById("t1").textContent = (t1?.name ?? "TEAM ONE");
+      document.getElementById("t2").textContent = (t2?.name ?? "TEAM TWO");
+
+      document.getElementById("s1").textContent = cur.score1 ?? 0;
+      document.getElementById("s2").textContent = cur.score2 ?? 0;
+
+      if (document.getElementById("logo1")) document.getElementById("logo1").src = t1?.logo ?? "";
+      if (document.getElementById("logo2")) document.getElementById("logo2").src = t2?.logo ?? "";
+
     } catch (e) {
-      document.getElementById("status").textContent = "err";
+      console.log("WCRT fetch error:", e);
     }
   }
 
   pull();
-  setInterval(pull, 1000); // ✅ updates every second in OBS
+  setInterval(pull, 500);
 </script>
 
 </body>
+
 </html>
